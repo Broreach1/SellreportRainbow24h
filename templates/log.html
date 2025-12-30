@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Logs - Greenmart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='log.css') }}">
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>📜 Sales Report Logs</h1>
+    <a href="{{ url_for('index') }}">← Back to Report Form</a>
+
+    <!-- Search + Filter -->
+    <div class="filters">
+      <label for="searchBox" class="sr-only">Search Logs</label>
+      <input type="text" id="searchBox" placeholder="🔍 Search logs...">
+
+      <label for="staffFilter" class="sr-only">Filter by Staff</label>
+      <select id="staffFilter">
+        <option value="">Filter by Staff</option>
+        {% for s in ["Pich","Lin","Sok Na","Choy Sokna","Pheary","Neath","Srey Neak","Mony Roth","Bo Ra","Reach"] %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Logs Table -->
+    <table id="logTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Staff</th>
+          <th>Action</th>
+          <th>Timestamp</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.id }}</td>
+          <td>{{ log.user }}</td>
+          <td>{{ log.action }}</td>
+          <td>{{ log.timestamp }}</td>
+          <td>
+            <ul>
+              {% if log.data %}{% for k,v in log.data.items() %}
+                <li><b>{{ k }}:</b> {{ v }}</li>
+              {% endfor %}{% else %}
+                <li>-</li>
+              {% endif %}
+            </ul>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="no-logs">No logs found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ===== Search + Filter =====
+document.addEventListener("DOMContentLoaded", function() {
+  const searchBox = document.getElementById("searchBox");
+  const staffFilter = document.getElementById("staffFilter");
+  const table = document.getElementById("logTable").getElementsByTagName("tbody")[0];
+
+  function filterLogs() {
+    const searchText = searchBox.value.toLowerCase();
+    const staff = staffFilter.value.toLowerCase();
+
+    Array.from(table.rows).forEach(row => {
+      const cells = row.getElementsByTagName("td");
+      if (cells.length < 5) return; // skip "No logs" row
+
+      const rowText = row.innerText.toLowerCase();
+      const staffText = cells[1].innerText.toLowerCase();
+
+      let match = true;
+      if (searchText && !rowText.includes(searchText)) {
+        match = false;
+      }
+      if (staff && staffText !== staff) {
+        match = false;
+      }
+
+      row.style.display = match ? "" : "none";
+    });
+  }
+
+  searchBox.addEventListener("input", filterLogs);
+  staffFilter.addEventListener("change", filterLogs);
+});
+</script>
+</body>
+</html>

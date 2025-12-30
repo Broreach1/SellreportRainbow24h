@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report Greenmart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>បញ្ជូនរបាយការណ៍ Greenmart</h1>
+    <p class="hint">បំពេញទម្រង់ខាងក្រោម របាយការណ៍នឹងត្រូវផ្ញើទៅ Telegram Bot របស់អ្នក។</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if not chat_set %}
+      <p class="msg error">⚠️ BOT_TOKEN / CHAT_ID មិនទាន់កំណត់។ សូមកែ .env មុនប្រើ។</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" action="/" target="_blank">
+      <!-- Date -->
+      <div class="form-group">
+        <label for="date">📅 កាលបរិច្ឆេទ</label>
+        <input id="date" name="date" type="date" required value="{{ form_data.get('Date', '') }}">
+      </div>
+
+      <!-- Time -->
+      <div class="form-group">
+        <label for="time">⏰ ម៉ោង</label>
+        <input id="time" name="time" type="time" value="{{ form_data.get('Time', '') }}">
+      </div>
+
+      <!-- Shift -->
+      <div class="form-group">
+        <label for="shift">⏰ វេន</label>
+        <select id="shift" name="shift" required>
+          <option value="">-- ជ្រើសវេន --</option>
+          {% for i in ['1','2','3'] %}
+            <option value="{{ i }}" {% if form_data.get('Shift')==i %}selected{% endif %}>{{ i }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Staff -->
+      <div class="form-group">
+        <label for="staff">👤 ឈ្មោះ</label>
+        <select id="staff" name="staff" required>
+          <option value="">-- ជ្រើសឈ្មោះ --</option>
+          {% for s in ["ពៅ ស្រីពីន","Chhoeun Lysa","JiFaa","Sun Nii"] %}
+            <option value="{{ s }}" {% if form_data.get('Staff')==s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Totals -->
+      <div class="form-group">
+        <label for="total_money">💵 លុយសរុប</label>
+        <input id="total_money" name="total_money" type="text" placeholder="ចំនួនសរុប" value="{{ form_data.get('Total Money','') }}">
+      </div>
+
+      <!-- Banks -->
+      <h3>🏦 Banks</h3>
+      <div class="form-group">
+        <label for="aba_usd">ABA Bank ($)</label>
+        <input id="aba_usd" name="aba_usd" type="text" placeholder="ចំនួន $" value="{{ form_data.get('ABA USD','') }}">
+      </div>
+
+      <div class="form-group">
+        <label for="aba_khr">ABA Bank (៛)</label>
+        <input id="aba_khr" name="aba_khr" type="text" placeholder="ចំនួន ៛" value="{{ form_data.get('ABA KHR','') }}">
+      </div>
+
+      <div class="form-group">
+        <label for="acleda_usd">ACLEDA ($)</label>
+        <input id="acleda_usd" name="acleda_usd" type="text" placeholder="ចំនួន $" value="{{ form_data.get('ACLEDA USD','') }}">
+      </div>
+
+      <div class="form-group">
+        <label for="acleda_khr">ACLEDA (៛)</label>
+        <input id="acleda_khr" name="acleda_khr" type="text" placeholder="ចំនួន ៛" value="{{ form_data.get('ACLEDA KHR','') }}">
+      </div>
+
+      <div class="form-group">
+        <label for="other_bank">Other Bank</label>
+        <input id="other_bank" name="other_bank" type="text" placeholder="ឈ្មោះ និងចំនួន" value="{{ form_data.get('Other Bank','') }}">
+      </div>
+
+      <!-- Cash -->
+      <h3>💰 Cash</h3>
+      <div class="form-group">
+        <label for="cash_usd">លុយដុល្លារ ($)</label>
+        <input id="cash_usd" name="cash_usd" type="text" placeholder="ចំនួន $" value="{{ form_data.get('Cash USD','') }}">
+      </div>
+
+      <div class="form-group">
+        <label for="cash_khr">លុយរៀល (៛)</label>
+        <input id="cash_khr" name="cash_khr" type="text" placeholder="ចំនួន ៛" value="{{ form_data.get('Cash KHR','') }}">
+      </div>
+
+      <!-- Expense -->
+      <div class="form-group">
+        <label for="expense">💸 ចំណាយ</label>
+        <textarea id="expense" name="expense" rows="4" placeholder="ឧទាហរណ៍៖ ទិញទំនិញ, ចំណាយដឹកជញ្ជូន...">{{ form_data.get('Expense','') }}</textarea>
+      </div>
+
+      <!-- Balance -->
+      <div class="form-group">
+        <label for="balance_status">⚖️ លើស / បាត</label>
+        <div class="inline-fields">
+          <select id="balance_status" name="balance_status">
+            <option value="">-- ជ្រើសរើស --</option>
+            <option value="លើស" {% if form_data.get('Balance Status')=='លើស' %}selected{% endif %}>លើស</option>
+            <option value="បាត" {% if form_data.get('Balance Status')=='បាត' %}selected{% endif %}>បាត</option>
+          </select>
+          <input id="balance_amount" name="balance_amount" type="text" placeholder="ចំនួន" value="{{ form_data.get('Balance Amount','') }}">
+        </div>
+      </div>
+
+      <!-- Attachment -->
+      <div class="form-group">
+        <label for="attachment">📎 Attachment (optional)</label>
+        <input id="attachment" name="attachment" type="file">
+      </div>
+
+      <button type="submit" class="btn-submit">🚀 Send to Telegram</button>
+    </form>
+
+    <!-- Link to logs -->
+    <p class="link-logs">
+      <a href="{{ url_for('view_logs') }}" class="btn-logs">📜 View Logs</a>
+    </p>
+
+    <p id="draft-msg">💾 Draft saved</p>
+    <p class="copyright">© 2025 Made by Reach 💖</p>
+
+    <!-- Dark mode toggle -->
+    <button id="darkToggle" class="btn-dark">🌙 Dark Mode</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector("form");
+  const draftMsg = document.getElementById("draft-msg");
+  const darkToggle = document.getElementById("darkToggle");
+
+  // Load saved draft
+  for (let field of form.elements) {
+    if (field.name && localStorage.getItem(field.name)) {
+      field.value = localStorage.getItem(field.name);
+    }
+  }
+
+  // Save draft on input
+  form.addEventListener("input", function(e) {
+    if (e.target.name && e.target.type !== "file") {
+      localStorage.setItem(e.target.name, e.target.value);
+      draftMsg.style.display = "inline";
+      clearTimeout(draftMsg.timeout);
+      draftMsg.timeout = setTimeout(() => { draftMsg.style.display = "none"; }, 1500);
+    }
+  });
+
+  // Clear draft after submit
+  form.addEventListener("submit", function() {
+    for (let field of form.elements) {
+      if (field.name) localStorage.removeItem(field.name);
+    }
+  });
+
+// Clear form + draft if redirected with ?clear_draft=1
+if (window.location.search.includes("clear_draft=1")) {
+  for (let field of form.elements) {
+    if (field.name) {
+      localStorage.removeItem(field.name);
+      if (field.type === "select-one") {
+        field.selectedIndex = 0;
+      } else if (field.type !== "file") {
+        field.value = "";
+      }
+    }
+  }
+  // Reset textarea
+  form.querySelectorAll("textarea").forEach(t => t.value = "");
+  
+  // ✅ stay on page with blank form
+  history.replaceState({}, document.title, window.location.pathname);
+}
+
+
+
+  // Dark mode toggle
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+  }
+  darkToggle.addEventListener("click", function() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+  });
+});
+</script>
+</body>
+</html>
