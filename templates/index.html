@@ -47,7 +47,7 @@
         <label for="shift">⏰ វេន</label>
         <select id="shift" name="shift" required>
           <option value="">-- ជ្រើសវេន --</option>
-          {% for i in ['1','2','3'] %}
+          {% for i in ['1','2','3','ទាំងពីរវេន'] %}
             <option value="{{ i }}" {% if form_data.get('Shift')==i %}selected{% endif %}>{{ i }}</option>
           {% endfor %}
         </select>
@@ -213,4 +213,5 @@ if (window.location.search.includes("clear_draft=1")) {
 </script>
 </body>
 </html>
+
 
