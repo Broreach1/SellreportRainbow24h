@@ -59,7 +59,7 @@ h1 {
 .form-group input,
 .form-group select,
 .form-group textarea {
-  width: 100%;
+  width: 95%;
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -221,3 +221,4 @@ body.dark .btn-dark {
     font-size: 1.3rem;
   }
 }
+
