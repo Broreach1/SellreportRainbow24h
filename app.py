@@ -128,18 +128,18 @@ def index():
 
         # Build Telegram message using already-cleaned record
         message = (
-            f"🛒 <b>របាយការណ៍លក់</b>\n"
-            f"📅 កាលបរិច្ឆេទ: <b>{record.get('Date')}</b>\n"
-            f"⏰ ម៉ោង: {record.get('Time')}\n"
-            f"⏰ វេន: {record.get('Shift')}\n"
-            f"👤 បុគ្គលិក: <b>{record.get('Staff')}</b>\n\n"
-            f"💵 <b>លុយសរុប:</b> {record.get('Total money')}\n"
-            f"🏦 ABA ($): {record.get('Aba usd')} | ABA (៛): {record.get('Aba khr')}\n"
-            f"🏦 ACLEDA ($): {record.get('Acleda usd')} | ACLEDA (៛): {record.get('Acleda khr')}\n"
-            f"🏦 Other Bank: {record.get('Other bank')}\n\n"
-            f"💰 Cash ($): {record.get('Cash usd')} | Cash (៛): {record.get('Cash khr')}\n\n"
-            f"💸 ចំណាយ: {record.get('Expense')}\n"
-            f"⚖️ លើស/បាត: {record.get('Balance status')} {record.get('Balance amount')}\n"
+            f" <b>របាយការណ៍លក់</b>\n"
+            f" កាលបរិច្ឆេទ: <b>{record.get('Date')}</b>\n"
+            f" ម៉ោង: {record.get('Time')}\n"
+            f" វេន: {record.get('Shift')}\n"
+            f" បុគ្គលិក: <b>{record.get('Staff')}</b>\n\n"
+            f" <b>លុយសរុប:</b> {record.get('Total money')}\n"
+            f" ABA ($): {record.get('Aba usd')} | ABA (៛): {record.get('Aba khr')}\n"
+            f" ACLEDA ($): {record.get('Acleda usd')} | ACLEDA (៛): {record.get('Acleda khr')}\n"
+            f" Other Bank: {record.get('Other bank')}\n\n"
+            f" Cash ($): {record.get('Cash usd')} | Cash (៛): {record.get('Cash khr')}\n\n"
+            f" ចំណាយ: {record.get('Expense')}\n"
+            f" លើស/បាត: {record.get('Balance status')} {record.get('Balance amount')}\n"
         )
         send_res = tg_send_message(message)
 
@@ -201,3 +201,4 @@ def clear_logs():
 if __name__ == "__main__":
     init_db()
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5600)), debug=True)
+
