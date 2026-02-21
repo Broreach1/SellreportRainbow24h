@@ -101,12 +101,12 @@
       <h3>💰 Cash</h3>
       <div class="form-group">
         <label for="cash_usd">លុយដុល្លារ ($)</label>
-        <input id="cash_usd" name="cash_usd" type="text" placeholder="ចំនួន $" value="{{ form_data.get('Cash USD','') }}">
+        <input id="cash_usd" name="cash_usd" type="text" placeholder="ចំនួន $" value="{{ form_data.get('Cash USD','') }}" required >
       </div>
 
       <div class="form-group">
         <label for="cash_khr">លុយរៀល (៛)</label>
-        <input id="cash_khr" name="cash_khr" type="text" placeholder="ចំនួន ៛" value="{{ form_data.get('Cash KHR','') }}">
+        <input id="cash_khr" name="cash_khr" type="text" placeholder="ចំនួន ៛" value="{{ form_data.get('Cash KHR','') }}" required >
       </div>
 
       <!-- Expense -->
@@ -213,5 +213,6 @@ if (window.location.search.includes("clear_draft=1")) {
 </script>
 </body>
 </html>
+
 
 
