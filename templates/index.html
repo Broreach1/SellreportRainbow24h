@@ -67,7 +67,7 @@
       <!-- Totals -->
       <div class="form-group">
         <label for="total_money">💵 លុយសរុប</label>
-        <input id="total_money" name="total_money" type="text" placeholder="ចំនួនសរុប" value="{{ form_data.get('Total Money','') }}">
+        <input id="total_money" name="total_money" type="text" placeholder="ចំនួនសរុប" value="{{ form_data.get('Total Money','') }}" required >
       </div>
 
       <!-- Banks -->
@@ -213,6 +213,7 @@ if (window.location.search.includes("clear_draft=1")) {
 </script>
 </body>
 </html>
+
 
 
 
